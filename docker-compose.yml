@@ -1,0 +1,26 @@
+version: '3.1'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:80"
+      - "44348:443"
+
+  prometheus:
+    image: prom/prometheus # Assuming you are using the official Prometheus image
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml # Mount the configuration file
+    depends_on:
+      - web
+
+  grafana:
+    image: grafana/grafana-enterprise
+    ports:
+      - "3001:3000"
+    depends_on:
+      - prometheus
+
+# Omitting the 'configs' section because it's not supported in Docker Compose v3.1
